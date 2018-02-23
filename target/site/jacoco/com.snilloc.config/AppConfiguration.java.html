@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AppConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BC-ElasticSearch</a> &gt; <a href="index.source.html" class="el_package">com.snilloc.config</a> &gt; <span class="el_source">AppConfiguration.java</span></div><h1>AppConfiguration.java</h1><pre class="source lang-java linenums">package com.snilloc.config;
+
+import com.snilloc.dao.AdvertiserDao;
+import com.snilloc.dao.impl.H2AdvertiserDaoImpl;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+
+/**
+ * Application Configuration
+ */
+@PropertySource(&quot;classpath:application.yml&quot;)
+@Configuration
+@ConfigurationProperties
+<span class="nc" id="L23">public class AppConfiguration {</span>
+
+    @NotEmpty
+    private String template;
+
+    @NotEmpty
+    private String defaultName;
+
+    // From the YAML file
+    @NotEmpty
+    @Value(&quot;${driverClass}&quot;)
+    private String driverClass;
+    @NotEmpty
+    @Value(&quot;${user}&quot;)
+    private String user;
+    @NotEmpty
+    @Value(&quot;${password}&quot;)
+    private String password;
+    @NotEmpty
+    @Value(&quot;${connection}&quot;)
+    private String connection;
+
+//    @JsonProperty
+    public String getTemplate() {
+<span class="nc" id="L47">        return template;</span>
+    }
+
+ //   @JsonProperty
+    public String getDefaultName() {
+<span class="nc" id="L52">        return defaultName;</span>
+    }
+
+  //  @JsonProperty
+    public void setDefaultName(String name) {
+<span class="nc" id="L57">        this.defaultName = name;</span>
+<span class="nc" id="L58">    }</span>
+
+   // @JsonProperty
+    @Bean
+    public Connection getConnection() {
+<span class="nc" id="L63">        Connection dbConnection = null;</span>
+        try {
+<span class="nc" id="L65">            Class.forName(driverClass);</span>
+<span class="nc" id="L66">        } catch (ClassNotFoundException ex) {</span>
+<span class="nc" id="L67">            System.out.println(ex.getMessage());</span>
+<span class="nc" id="L68">        }</span>
+
+        try {
+<span class="nc" id="L71">            dbConnection = DriverManager.getConnection(connection, user, password);</span>
+<span class="nc" id="L72">        } catch (SQLException ex) {</span>
+<span class="nc" id="L73">            System.out.println(&quot;ERROR connection to DB&quot;);</span>
+<span class="nc" id="L74">        }</span>
+<span class="nc" id="L75">        return dbConnection;</span>
+    }
+
+    @Bean
+    public AdvertiserDao getAdvertiserDao() {
+        try {
+<span class="nc" id="L81">            return new H2AdvertiserDaoImpl(getConnection());</span>
+<span class="nc" id="L82">        } catch (Exception ex) {</span>
+<span class="nc" id="L83">            return null;</span>
+        }
+    }
+
+    public void setDriverClass(String driverClass) {
+<span class="nc" id="L88">        this.driverClass = driverClass;</span>
+<span class="nc" id="L89">    }</span>
+
+    public void setUser(String user) {
+<span class="nc" id="L92">        this.user = user;</span>
+<span class="nc" id="L93">    }</span>
+
+    public void setPassword(String password) {
+<span class="nc" id="L96">        this.password = password;</span>
+<span class="nc" id="L97">    }</span>
+
+    public void setConnection(String connection) {
+<span class="nc" id="L100">        this.connection = connection;</span>
+<span class="nc" id="L101">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.0.201801022044</span></div></body></html>

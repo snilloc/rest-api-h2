@@ -1,0 +1,24 @@
+app:
+  restclient:
+    hostname: 127.0.0.1
+    scheme: http
+    port: 9200
+  index:
+    name: 800001
+    type: patient
+    from: 0
+    size: 5
+    timeout: 60
+
+server:
+    applicationConnectors:
+      - type: http
+        port: 8090
+
+template: "movie-api"
+defaultName: "movie-api-server"
+user: tester
+password: s00perSecrEET
+
+driverClass : org.h2.Driver
+connection: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1

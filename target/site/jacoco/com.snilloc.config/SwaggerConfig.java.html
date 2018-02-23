@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SwaggerConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BC-ElasticSearch</a> &gt; <a href="index.source.html" class="el_package">com.snilloc.config</a> &gt; <span class="el_source">SwaggerConfig.java</span></div><h1>SwaggerConfig.java</h1><pre class="source lang-java linenums">package com.snilloc.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
+import springfox.documentation.service.VendorExtension;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static springfox.documentation.builders.PathSelectors.regex;
+
+@EnableSwagger2
+@Configuration
+<span class="nc" id="L20">public class SwaggerConfig {</span>
+
+    @Bean
+    public Docket patientApi() {
+<span class="nc" id="L24">        return new Docket(DocumentationType.SWAGGER_2)</span>
+<span class="nc" id="L25">                .select()</span>
+<span class="nc" id="L26">                .apis(RequestHandlerSelectors.basePackage(&quot;com.snilloc&quot;))</span>
+<span class="nc" id="L27">                .paths(regex(&quot;/api.*&quot;))</span>
+<span class="nc" id="L28">                .build()</span>
+<span class="nc" id="L29">                .apiInfo(metaInfo());</span>
+    }
+
+    private ApiInfo metaInfo() {
+        // Title description, version, termsOfServiceUrl, Contact, license, licenseUrl, vendorExtension
+<span class="nc" id="L34">        Contact contact = new Contact(&quot;Brian Collins&quot;, &quot;https://www.youtube.com&quot;, &quot;snilloc@live.com&quot;);</span>
+<span class="nc" id="L35">        Collection&lt;VendorExtension&gt; vendorExtensions = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L36">        VendorExtension vendor = new MyVendorExtension(&quot;spring&quot;, &quot;value&quot;);</span>
+<span class="nc" id="L37">        vendorExtensions.add(vendor);</span>
+<span class="nc" id="L38">        ApiInfo apiInfo = new ApiInfo(&quot;BackEnd API Example&quot;, &quot;REST API Documentation&quot;,</span>
+                &quot;0.1&quot;, &quot;Terms of Service&quot;, contact, &quot;Apache License Version 2.0&quot;,
+                &quot;https://www.apache.org/license.html&quot;, vendorExtensions);
+
+<span class="nc" id="L42">        return apiInfo;</span>
+    }
+
+    private class  MyVendorExtension implements VendorExtension {
+        private String name;
+        private String value;
+
+<span class="nc" id="L49">        public MyVendorExtension(String name, String value) {</span>
+<span class="nc" id="L50">            this.name = name;</span>
+<span class="nc" id="L51">            this.value = value;</span>
+<span class="nc" id="L52">        }</span>
+        public String getName() {
+<span class="nc" id="L54">            return name;</span>
+        }
+
+        public String getValue() {
+<span class="nc" id="L58">            return value;</span>
+        }
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.0.201801022044</span></div></body></html>

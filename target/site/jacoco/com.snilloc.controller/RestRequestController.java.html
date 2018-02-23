@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RestRequestController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BC-ElasticSearch</a> &gt; <a href="index.source.html" class="el_package">com.snilloc.controller</a> &gt; <span class="el_source">RestRequestController.java</span></div><h1>RestRequestController.java</h1><pre class="source lang-java linenums">package com.snilloc.controller;
+/**
+ *
+ */
+import com.snilloc.dao.AdvertiserDao;
+import com.snilloc.entity.Advertiser;
+import com.snilloc.exceptions.DaoDataException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import java.util.UUID;
+
+<span class="fc" id="L18">@Slf4j</span>
+@RestController
+@RequestMapping(&quot;api&quot;)
+@Api(value = &quot;Advertiser Resource&quot;, description = &quot;Advertiser information&quot;)
+public class RestRequestController {
+
+    @Autowired
+    private AdvertiserDao dao;
+
+<span class="fc" id="L27">    public RestRequestController() {</span>
+<span class="fc" id="L28">    }</span>
+
+    public void init() throws DaoDataException {
+        try {
+<span class="fc" id="L32">            dao.init();</span>
+<span class="nc" id="L33">        } catch (DaoDataException ex) {</span>
+<span class="nc" id="L34">            throw ex;</span>
+<span class="fc" id="L35">        }</span>
+<span class="fc" id="L36">    }</span>
+
+    /**
+     *
+     * @param ad
+     * @return
+     */
+    @ApiOperation(value = &quot;returns db index of document&quot;)
+    @ApiResponses(
+            value = { @ApiResponse(code = 100, message = &quot;100 message &quot;),
+            @ApiResponse(code = 101, message = &quot;Success&quot;)}
+    )
+    @PostMapping(value = &quot;/advertisers&quot;, consumes = &quot;application/json; charset=utf-8&quot;)
+    public String create(@RequestBody Advertiser ad) {
+        try {
+<span class="fc" id="L51">            log.warn(&quot;Saving ad index...&quot;);</span>
+<span class="fc" id="L52">            UUID uuid = dao.save(ad);</span>
+<span class="fc" id="L53">            return uuid.toString();</span>
+<span class="nc" id="L54">        } catch (DaoDataException ex) {</span>
+            // TODO Handled if failed to save data
+
+<span class="nc" id="L57">            return null;</span>
+        }
+    }
+
+    /**
+     *
+     * @param document
+     */
+    @ApiOperation(value = &quot;returns db index of document&quot;)
+    @PostMapping(value = &quot;/advertisers/?&quot;, params = &quot;id&quot;, consumes = &quot;application/json; charset=utf-8&quot;)
+    public void update(@RequestBody Advertiser document){
+        try {
+<span class="nc" id="L69">            String id = null;</span>
+<span class="nc" id="L70">            log.warn(&quot;Updating....&quot;);</span>
+<span class="nc" id="L71">            dao.update(document);</span>
+<span class="nc" id="L72">        } catch (DaoDataException e) {</span>
+            // Handle if not found
+
+<span class="nc" id="L75">            return;</span>
+<span class="nc" id="L76">        }</span>
+<span class="nc" id="L77">    }</span>
+
+    /**
+     *
+     * @param id of advertiser to delete
+     */
+    @DeleteMapping(value = &quot;/advertiser/?&quot;)
+    public void delete(String id){
+        try {
+<span class="fc" id="L86">            log.warn(&quot;Deleting id: &quot; + id);</span>
+<span class="fc" id="L87">            UUID uuid = UUID.fromString(id);</span>
+<span class="fc" id="L88">            dao.delete(uuid);</span>
+<span class="nc" id="L89">        } catch (DaoDataException ex) {</span>
+            // Ignore if not found
+<span class="nc" id="L91">            return ;</span>
+<span class="fc" id="L92">        }</span>
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * Get all of the advertisers
+     *
+     * @return List of {@link Advertiser}
+     */
+    @GetMapping(value = &quot;/advertisers/all&quot;, produces = &quot;application/json; charset=utf-8&quot;)
+    public List&lt;Advertiser&gt; getAllDocuments() {
+        try {
+<span class="fc" id="L103">            log.warn(&quot;Getting all docs:&quot;);</span>
+<span class="fc" id="L104">            return dao.get();</span>
+<span class="nc" id="L105">        } catch (DaoDataException ex) {</span>
+<span class="nc" id="L106">            return null;</span>
+        }
+    }
+
+    public void setAdvertiserDao(AdvertiserDao dao) {
+<span class="fc" id="L111">        this.dao = dao;</span>
+<span class="fc" id="L112">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.0.201801022044</span></div></body></html>

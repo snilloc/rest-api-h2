@@ -1,0 +1,14 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+BC-ElasticSearch,com.snilloc.exceptions,JsonConversionException,9,0,0,0,4,0,2,0,2,0
+BC-ElasticSearch,com.snilloc.exceptions,DaoDataException,4,9,0,0,2,4,1,2,1,2
+BC-ElasticSearch,com.snilloc.config,SwaggerConfig.MyVendorExtension,18,0,0,0,6,0,3,0,3,0
+BC-ElasticSearch,com.snilloc.config,SwaggerConfig,55,0,0,0,13,0,3,0,3,0
+BC-ElasticSearch,com.snilloc.config,AppConfiguration,65,0,0,0,26,0,10,0,10,0
+BC-ElasticSearch,com.snilloc.controller,RestRequestController,24,53,0,0,15,18,1,7,1,7
+BC-ElasticSearch,com.snilloc.entity,Advertiser,0,27,0,0,0,10,0,5,0,5
+BC-ElasticSearch,com.snilloc.services.impl,JacksonJConverterServiceImpl,3,0,0,0,1,0,1,0,1,0
+BC-ElasticSearch,com.snilloc.services.impl,EncryptionServiceImpl,217,0,2,0,34,0,6,0,5,0
+BC-ElasticSearch,com.snilloc.services.impl,SessionServiceImpl,144,0,6,0,27,0,7,0,4,0
+BC-ElasticSearch,com.snilloc.services.impl,GsonConverterServiceImpl,43,0,0,0,10,0,3,0,3,0
+BC-ElasticSearch,com.snilloc,RestSpringDemo,17,0,0,0,4,0,2,0,2,0
+BC-ElasticSearch,com.snilloc.dao.impl,H2AdvertiserDaoImpl,72,336,1,5,18,81,1,11,0,9
