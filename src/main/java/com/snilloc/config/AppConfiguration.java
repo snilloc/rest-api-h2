@@ -22,12 +22,6 @@ import java.sql.SQLException;
 @ConfigurationProperties
 public class AppConfiguration {
 
-    @NotEmpty
-    private String template;
-
-    @NotEmpty
-    private String defaultName;
-
     // From the YAML file
     @NotEmpty
     @Value("${driverClass}")
@@ -41,21 +35,6 @@ public class AppConfiguration {
     @NotEmpty
     @Value("${connection}")
     private String connection;
-
-//    @JsonProperty
-    public String getTemplate() {
-        return template;
-    }
-
- //   @JsonProperty
-    public String getDefaultName() {
-        return defaultName;
-    }
-
-  //  @JsonProperty
-    public void setDefaultName(String name) {
-        this.defaultName = name;
-    }
 
    // @JsonProperty
     @Bean
@@ -75,7 +54,6 @@ public class AppConfiguration {
         return dbConnection;
     }
 
-    @Bean
     public AdvertiserDao getAdvertiserDao() {
         try {
             return new H2AdvertiserDaoImpl(getConnection());

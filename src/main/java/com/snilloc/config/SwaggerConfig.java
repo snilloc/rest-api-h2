@@ -2,6 +2,8 @@ package com.snilloc.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -17,10 +19,10 @@ import static springfox.documentation.builders.PathSelectors.regex;
 
 @EnableSwagger2
 @Configuration
-public class SwaggerConfig {
+//@Import({ springfox.documentation.spring.data.rest.configuration.SpringDataRestConfiguration.class})
+public class SwaggerConfig extends WebMvcConfigurationSupport {
 
-    @Bean
-    public Docket patientApi() {
+    public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.snilloc"))
@@ -28,6 +30,15 @@ public class SwaggerConfig {
                 .build()
                 .apiInfo(metaInfo());
     }
+
+    @Override
+    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+            registry.addResourceHandler("swagger-ui.html")
+                    .addResourceLocations("classpath:/dist/resources/");
+
+            registry.addResourceHandler("/dist/**")
+                    .addResourceLocations("classpath:/dist/webjars/");
+        }
 
     private ApiInfo metaInfo() {
         // Title description, version, termsOfServiceUrl, Contact, license, licenseUrl, vendorExtension
@@ -38,7 +49,6 @@ public class SwaggerConfig {
         ApiInfo apiInfo = new ApiInfo("BackEnd API Example", "REST API Documentation",
                 "0.1", "Terms of Service", contact, "Apache License Version 2.0",
                 "https://www.apache.org/license.html", vendorExtensions);
-
         return apiInfo;
     }
 

@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SwaggerConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BC-ElasticSearch</a> &gt; <a href="index.source.html" class="el_package">com.snilloc.config</a> &gt; <span class="el_source">SwaggerConfig.java</span></div><h1>SwaggerConfig.java</h1><pre class="source lang-java linenums">package com.snilloc.config;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SwaggerConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BC-rest-api-h2-demo</a> &gt; <a href="index.source.html" class="el_package">com.snilloc.config</a> &gt; <span class="el_source">SwaggerConfig.java</span></div><h1>SwaggerConfig.java</h1><pre class="source lang-java linenums">package com.snilloc.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -19,10 +20,9 @@ import static springfox.documentation.builders.PathSelectors.regex;
 @EnableSwagger2
 @Configuration
 //@Import({ springfox.documentation.spring.data.rest.configuration.SpringDataRestConfiguration.class})
-<span class="nc" id="L22">public class SwaggerConfig {</span>
+<span class="nc" id="L23">public class SwaggerConfig extends WebMvcConfigurationSupport {</span>
 
-    @Bean
-    public Docket patientApi() {
+    public Docket api() {
 <span class="nc" id="L26">        return new Docket(DocumentationType.SWAGGER_2)</span>
 <span class="nc" id="L27">                .select()</span>
 <span class="nc" id="L28">                .apis(RequestHandlerSelectors.basePackage(&quot;com.snilloc&quot;))</span>
@@ -31,32 +31,41 @@ import static springfox.documentation.builders.PathSelectors.regex;
 <span class="nc" id="L31">                .apiInfo(metaInfo());</span>
     }
 
+    @Override
+    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+<span class="nc" id="L36">            registry.addResourceHandler(&quot;swagger-ui.html&quot;)</span>
+<span class="nc" id="L37">                    .addResourceLocations(&quot;classpath:/dist/resources/&quot;);</span>
+
+<span class="nc" id="L39">            registry.addResourceHandler(&quot;/dist/**&quot;)</span>
+<span class="nc" id="L40">                    .addResourceLocations(&quot;classpath:/dist/webjars/&quot;);</span>
+<span class="nc" id="L41">        }</span>
+
     private ApiInfo metaInfo() {
         // Title description, version, termsOfServiceUrl, Contact, license, licenseUrl, vendorExtension
-<span class="nc" id="L36">        Contact contact = new Contact(&quot;Brian Collins&quot;, &quot;https://www.youtube.com&quot;, &quot;snilloc@live.com&quot;);</span>
-<span class="nc" id="L37">        Collection&lt;VendorExtension&gt; vendorExtensions = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L38">        VendorExtension vendor = new MyVendorExtension(&quot;spring&quot;, &quot;value&quot;);</span>
-<span class="nc" id="L39">        vendorExtensions.add(vendor);</span>
-<span class="nc" id="L40">        ApiInfo apiInfo = new ApiInfo(&quot;BackEnd API Example&quot;, &quot;REST API Documentation&quot;,</span>
+<span class="nc" id="L45">        Contact contact = new Contact(&quot;Brian Collins&quot;, &quot;https://www.youtube.com&quot;, &quot;snilloc@live.com&quot;);</span>
+<span class="nc" id="L46">        Collection&lt;VendorExtension&gt; vendorExtensions = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L47">        VendorExtension vendor = new MyVendorExtension(&quot;spring&quot;, &quot;value&quot;);</span>
+<span class="nc" id="L48">        vendorExtensions.add(vendor);</span>
+<span class="nc" id="L49">        ApiInfo apiInfo = new ApiInfo(&quot;BackEnd API Example&quot;, &quot;REST API Documentation&quot;,</span>
                 &quot;0.1&quot;, &quot;Terms of Service&quot;, contact, &quot;Apache License Version 2.0&quot;,
                 &quot;https://www.apache.org/license.html&quot;, vendorExtensions);
-<span class="nc" id="L43">        return apiInfo;</span>
+<span class="nc" id="L52">        return apiInfo;</span>
     }
 
     private class  MyVendorExtension implements VendorExtension {
         private String name;
         private String value;
 
-<span class="nc" id="L50">        public MyVendorExtension(String name, String value) {</span>
-<span class="nc" id="L51">            this.name = name;</span>
-<span class="nc" id="L52">            this.value = value;</span>
-<span class="nc" id="L53">        }</span>
+<span class="nc" id="L59">        public MyVendorExtension(String name, String value) {</span>
+<span class="nc" id="L60">            this.name = name;</span>
+<span class="nc" id="L61">            this.value = value;</span>
+<span class="nc" id="L62">        }</span>
         public String getName() {
-<span class="nc" id="L55">            return name;</span>
+<span class="nc" id="L64">            return name;</span>
         }
 
         public String getValue() {
-<span class="nc" id="L59">            return value;</span>
+<span class="nc" id="L68">            return value;</span>
         }
     }
 

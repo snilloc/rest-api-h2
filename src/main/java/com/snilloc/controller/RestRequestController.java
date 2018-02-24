@@ -2,6 +2,7 @@ package com.snilloc.controller;
 /**
  *
  */
+import com.snilloc.config.AppConfiguration;
 import com.snilloc.dao.AdvertiserDao;
 import com.snilloc.entity.Advertiser;
 import com.snilloc.exceptions.DaoDataException;
@@ -25,6 +26,7 @@ public class RestRequestController {
     private AdvertiserDao dao;
 
     public RestRequestController() {
+        AppConfiguration app = new AppConfiguration();
     }
 
     public void init() throws DaoDataException {
@@ -80,7 +82,7 @@ public class RestRequestController {
      *
      * @param id of advertiser to delete
      */
-    @DeleteMapping(value = "/advertiser/?")
+    @DeleteMapping(value = "/advertiser/?", params = "id",  consumes="application/json; charset=utf-8")
     public void delete(String id){
         try {
             log.warn("Deleting id: " + id);
