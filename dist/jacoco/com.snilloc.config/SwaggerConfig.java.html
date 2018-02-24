@@ -2,6 +2,7 @@
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -17,45 +18,45 @@ import static springfox.documentation.builders.PathSelectors.regex;
 
 @EnableSwagger2
 @Configuration
-<span class="nc" id="L20">public class SwaggerConfig {</span>
+//@Import({ springfox.documentation.spring.data.rest.configuration.SpringDataRestConfiguration.class})
+<span class="nc" id="L22">public class SwaggerConfig {</span>
 
     @Bean
     public Docket patientApi() {
-<span class="nc" id="L24">        return new Docket(DocumentationType.SWAGGER_2)</span>
-<span class="nc" id="L25">                .select()</span>
-<span class="nc" id="L26">                .apis(RequestHandlerSelectors.basePackage(&quot;com.snilloc&quot;))</span>
-<span class="nc" id="L27">                .paths(regex(&quot;/api.*&quot;))</span>
-<span class="nc" id="L28">                .build()</span>
-<span class="nc" id="L29">                .apiInfo(metaInfo());</span>
+<span class="nc" id="L26">        return new Docket(DocumentationType.SWAGGER_2)</span>
+<span class="nc" id="L27">                .select()</span>
+<span class="nc" id="L28">                .apis(RequestHandlerSelectors.basePackage(&quot;com.snilloc&quot;))</span>
+<span class="nc" id="L29">                .paths(regex(&quot;/api.*&quot;))</span>
+<span class="nc" id="L30">                .build()</span>
+<span class="nc" id="L31">                .apiInfo(metaInfo());</span>
     }
 
     private ApiInfo metaInfo() {
         // Title description, version, termsOfServiceUrl, Contact, license, licenseUrl, vendorExtension
-<span class="nc" id="L34">        Contact contact = new Contact(&quot;Brian Collins&quot;, &quot;https://www.youtube.com&quot;, &quot;snilloc@live.com&quot;);</span>
-<span class="nc" id="L35">        Collection&lt;VendorExtension&gt; vendorExtensions = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L36">        VendorExtension vendor = new MyVendorExtension(&quot;spring&quot;, &quot;value&quot;);</span>
-<span class="nc" id="L37">        vendorExtensions.add(vendor);</span>
-<span class="nc" id="L38">        ApiInfo apiInfo = new ApiInfo(&quot;BackEnd API Example&quot;, &quot;REST API Documentation&quot;,</span>
+<span class="nc" id="L36">        Contact contact = new Contact(&quot;Brian Collins&quot;, &quot;https://www.youtube.com&quot;, &quot;snilloc@live.com&quot;);</span>
+<span class="nc" id="L37">        Collection&lt;VendorExtension&gt; vendorExtensions = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L38">        VendorExtension vendor = new MyVendorExtension(&quot;spring&quot;, &quot;value&quot;);</span>
+<span class="nc" id="L39">        vendorExtensions.add(vendor);</span>
+<span class="nc" id="L40">        ApiInfo apiInfo = new ApiInfo(&quot;BackEnd API Example&quot;, &quot;REST API Documentation&quot;,</span>
                 &quot;0.1&quot;, &quot;Terms of Service&quot;, contact, &quot;Apache License Version 2.0&quot;,
                 &quot;https://www.apache.org/license.html&quot;, vendorExtensions);
-
-<span class="nc" id="L42">        return apiInfo;</span>
+<span class="nc" id="L43">        return apiInfo;</span>
     }
 
     private class  MyVendorExtension implements VendorExtension {
         private String name;
         private String value;
 
-<span class="nc" id="L49">        public MyVendorExtension(String name, String value) {</span>
-<span class="nc" id="L50">            this.name = name;</span>
-<span class="nc" id="L51">            this.value = value;</span>
-<span class="nc" id="L52">        }</span>
+<span class="nc" id="L50">        public MyVendorExtension(String name, String value) {</span>
+<span class="nc" id="L51">            this.name = name;</span>
+<span class="nc" id="L52">            this.value = value;</span>
+<span class="nc" id="L53">        }</span>
         public String getName() {
-<span class="nc" id="L54">            return name;</span>
+<span class="nc" id="L55">            return name;</span>
         }
 
         public String getValue() {
-<span class="nc" id="L58">            return value;</span>
+<span class="nc" id="L59">            return value;</span>
         }
     }
 
