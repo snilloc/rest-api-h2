@@ -12,6 +12,7 @@ mvn clean package
 ## Build a Test Report
 ```
 mnv clean test jacoco:report
+```
 
 ## Verify the code coverage meets min 
 ```
@@ -25,5 +26,7 @@ mvn clean install
 
 
 ## Bring up Ad REST API
+```
 mvn spring-boot:run
+```
 

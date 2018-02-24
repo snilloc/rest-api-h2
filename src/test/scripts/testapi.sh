@@ -13,7 +13,7 @@ then
    token=$2
 else
   echo "Usage: "
-  echo "     test-api.sh <Movie server or http://localhost:8000>> <encoded token> "
+  echo "     test-api.sh <Advertiser server or http://localhost:8080>> <encoded token> "
   echo ""
   exit 0
 fi
