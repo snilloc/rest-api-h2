@@ -1,8 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdvertiserServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">BC-rest-api-h2-demo</a> &gt; <a href="index.source.html" class="el_package">com.snilloc.services.impl</a> &gt; <span class="el_source">AdvertiserServiceImpl.java</span></div><h1>AdvertiserServiceImpl.java</h1><pre class="source lang-java linenums">package com.snilloc.services.impl;
 
+import com.snilloc.dao.AdvertiserDao;
+import com.snilloc.dao.impl.H2AdvertiserDaoImpl;
+import com.snilloc.entity.Advertiser;
+import com.snilloc.exceptions.DaoDataException;
+import com.snilloc.exceptions.ServiceException;
 import com.snilloc.services.AdvertiserService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
-<span class="nc" id="L5">public class AdvertiserServiceImpl implements AdvertiserService {</span>
+import java.sql.Connection;
+import java.util.List;
+import java.util.UUID;
+
+<span class="fc" id="L16">@Slf4j</span>
+public class AdvertiserServiceImpl implements AdvertiserService {
+
+    @Autowired
+    private AdvertiserDao dao;
+
+<span class="fc" id="L22">    public AdvertiserServiceImpl(Connection connection) {</span>
+        try {
+<span class="fc" id="L24">            dao = new H2AdvertiserDaoImpl(connection);</span>
+<span class="fc" id="L25">            dao.init();</span>
+<span class="nc" id="L26">        } catch (DaoDataException ex) {</span>
+//              throw ex;
+<span class="fc" id="L28">        }</span>
+<span class="fc" id="L29">    }</span>
+
+
+
+    public List&lt;Advertiser&gt; get() throws ServiceException {
+        try {
+<span class="fc" id="L35">            List&lt;Advertiser&gt; ads = null;</span>
+<span class="fc" id="L36">            ads = dao.get();</span>
+<span class="fc" id="L37">            return ads;</span>
+<span class="nc" id="L38">        } catch (DaoDataException ex) {</span>
+<span class="nc" id="L39">            throw new ServiceException(&quot;Failed to find any&quot;, ex);</span>
+        }
+    }
+
+
+    public Advertiser get(String id) throws IllegalArgumentException, ServiceException {
+        try {
+<span class="nc bnc" id="L46" title="All 2 branches missed.">            if (id != null) {</span>
+<span class="nc" id="L47">                throw new IllegalArgumentException(&quot;Invalid id&quot;);</span>
+            }
+
+<span class="nc" id="L50">            UUID uid = UUID.fromString(id);</span>
+
+<span class="nc" id="L52">            Advertiser ads = dao.get(uid);</span>
+<span class="nc" id="L53">            return ads;</span>
+<span class="nc" id="L54">        } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L55">            throw ex;</span>
+<span class="nc" id="L56">        } catch (DaoDataException ex) {</span>
+<span class="nc" id="L57">            throw new ServiceException(&quot;Failed to find any&quot;, ex);</span>
+        }
+    }
+
+    public UUID save(Advertiser ad) throws IllegalArgumentException, ServiceException {
+        try {
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">            if (ad.getId() == null) {</span>
+<span class="fc" id="L64">                UUID id = dao.save(ad);</span>
+<span class="fc" id="L65">                return id;</span>
+            } else {
+<span class="nc" id="L67">                dao.update(ad);</span>
+<span class="nc" id="L68">                return ad.getId();</span>
+            }
+
+<span class="nc" id="L71">        } catch (DaoDataException ex) {</span>
+<span class="nc" id="L72">            throw new ServiceException(&quot;Failed to update: &quot; + ad.getId(), ex);</span>
+        }
+    }
+
+        public void delete(String id) {
+            try {
+<span class="fc" id="L78">                log.warn(&quot;Deleting id: &quot; + id);</span>
+<span class="fc" id="L79">                UUID uuid = UUID.fromString(id);</span>
+<span class="fc" id="L80">                dao.delete(uuid);</span>
+<span class="nc" id="L81">            } catch (DaoDataException ex) {</span>
+                // Ignore if not found
+<span class="nc" id="L83">                return ;</span>
+<span class="fc" id="L84">            }</span>
+<span class="fc" id="L85">        }</span>
 
 
 }

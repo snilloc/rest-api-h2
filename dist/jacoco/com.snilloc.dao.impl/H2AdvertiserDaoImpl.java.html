@@ -3,7 +3,6 @@
 import com.snilloc.dao.AdvertiserDao;
 import com.snilloc.entity.Advertiser;
 import com.snilloc.exceptions.DaoDataException;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -19,77 +18,77 @@ import java.util.UUID;
 /**
  * H2 Database Movie Data Access Object that implements Movie DAO
  */
-<span class="fc" id="L22">@Slf4j</span>
+<span class="fc" id="L21">@Slf4j</span>
 @Component
 public class H2AdvertiserDaoImpl implements AdvertiserDao {
 
     private Connection connection;
 
     // TABLE
-<span class="fc" id="L29">    private final String CREATE_ADVERTISER_TABLE_SQL = &quot;CREATE TABLE ADVERTISER (UID VARCHAR(255) PRIMARY KEY, &quot; +</span>
+<span class="fc" id="L28">    private final String CREATE_ADVERTISER_TABLE_SQL = &quot;CREATE TABLE ADVERTISER (UID VARCHAR(255) PRIMARY KEY, &quot; +</span>
             &quot;NAME VARCHAR(255), CONTACT_NAME VARCHAR(255), CREDIT_AMOUNT DOUBLE)&quot;;
 
     // SQL
-<span class="fc" id="L33">    private final String GET_ADVERTISER_BY_ID_SQL = &quot;SELECT UID, NAME, CONTACT_NAME, CREDIT_AMOUNT FROM ADVERTISER WHERE UID = ? &quot;;</span>
-<span class="fc" id="L34">    private final String GET_ALL_ADVERTISER_SQL = &quot;SELECT * FROM ADVERTISER&quot;;</span>
-<span class="fc" id="L35">    private final String INSERT_ADVERTISER_BY_ID_SQL = &quot;INSERT INTO ADVERTISER (UID, NAME, CONTACT_NAME, CREDIT_AMOUNT) VALUES (?, ?, ?, ?)&quot;;</span>
-<span class="fc" id="L36">    private final String UPDATE_ADVERTISER_BY_ID_SQL = &quot;UPDATE ADVERTISER SET NAME= ?, CONTACT_NAME= ?, CREDIT_AMOUNT= ? WHERE UID = ? &quot;;</span>
-<span class="fc" id="L37">    private final String DELETE_ADVERTISER_BY_ID_SQL = &quot;DELETE ADVERTISER WHERE UID = ?&quot;;</span>
+<span class="fc" id="L32">    private final String GET_ADVERTISER_BY_ID_SQL = &quot;SELECT UID, NAME, CONTACT_NAME, CREDIT_AMOUNT FROM ADVERTISER WHERE UID = ? &quot;;</span>
+<span class="fc" id="L33">    private final String GET_ALL_ADVERTISER_SQL = &quot;SELECT * FROM ADVERTISER&quot;;</span>
+<span class="fc" id="L34">    private final String INSERT_ADVERTISER_BY_ID_SQL = &quot;INSERT INTO ADVERTISER (UID, NAME, CONTACT_NAME, CREDIT_AMOUNT) VALUES (?, ?, ?, ?)&quot;;</span>
+<span class="fc" id="L35">    private final String UPDATE_ADVERTISER_BY_ID_SQL = &quot;UPDATE ADVERTISER SET NAME= ?, CONTACT_NAME= ?, CREDIT_AMOUNT= ? WHERE UID = ? &quot;;</span>
+<span class="fc" id="L36">    private final String DELETE_ADVERTISER_BY_ID_SQL = &quot;DELETE ADVERTISER WHERE UID = ?&quot;;</span>
 
-<span class="fc" id="L39">    public H2AdvertiserDaoImpl(Connection connection) {</span>
-<span class="fc" id="L40">        this.connection = connection;</span>
-<span class="fc" id="L41">    }</span>
+<span class="fc" id="L38">    public H2AdvertiserDaoImpl(Connection connection) {</span>
+<span class="fc" id="L39">        this.connection = connection;</span>
+<span class="fc" id="L40">    }</span>
 
     public void init() throws DaoDataException {
-<span class="fc" id="L44">        PreparedStatement createStatement = null;</span>
+<span class="fc" id="L43">        PreparedStatement createStatement = null;</span>
         try {
-<span class="fc" id="L46">            createStatement = this.connection.prepareStatement(CREATE_ADVERTISER_TABLE_SQL);</span>
-<span class="fc" id="L47">            createStatement.executeUpdate();</span>
-<span class="fc" id="L48">            log.warn(&quot;ADVERTISER TABLE Created&quot;);</span>
-<span class="fc" id="L49">        } catch (SQLException ex) {</span>
-<span class="fc" id="L50">            log.warn(&quot;SQL Exception: &quot; + ex.getMessage());</span>
-<span class="fc" id="L51">            throw new DaoDataException(&quot;SQL Error&quot;, ex);</span>
-<span class="nc" id="L52">        } catch (Exception ex) {</span>
-<span class="nc" id="L53">            log.error(&quot;Unknown error: &quot; + ex.getMessage());</span>
-<span class="nc" id="L54">            throw new DaoDataException(&quot;unknown error&quot;, ex);</span>
+<span class="fc" id="L45">            createStatement = this.connection.prepareStatement(CREATE_ADVERTISER_TABLE_SQL);</span>
+<span class="fc" id="L46">            createStatement.executeUpdate();</span>
+<span class="fc" id="L47">            log.warn(&quot;ADVERTISER TABLE Created&quot;);</span>
+<span class="fc" id="L48">        } catch (SQLException ex) {</span>
+<span class="fc" id="L49">            log.warn(&quot;SQL Exception: &quot; + ex.getMessage());</span>
+<span class="fc" id="L50">            throw new DaoDataException(&quot;SQL Error&quot;, ex);</span>
+<span class="nc" id="L51">        } catch (Exception ex) {</span>
+<span class="nc" id="L52">            log.error(&quot;Unknown error: &quot; + ex.getMessage());</span>
+<span class="nc" id="L53">            throw new DaoDataException(&quot;unknown error&quot;, ex);</span>
         } finally {
-<span class="fc" id="L56">            close(createStatement);</span>
+<span class="fc" id="L55">            close(createStatement);</span>
         }
-<span class="fc" id="L58">    }</span>
+<span class="fc" id="L57">    }</span>
 
     public void delete(UUID id) throws DaoDataException {
-<span class="fc" id="L61">        PreparedStatement deleteStatement = null;</span>
+<span class="fc" id="L60">        PreparedStatement deleteStatement = null;</span>
         try {
-<span class="fc" id="L63">            deleteStatement = connection.prepareStatement(DELETE_ADVERTISER_BY_ID_SQL);</span>
-<span class="fc" id="L64">            deleteStatement.setString(1, id.toString());</span>
-<span class="fc" id="L65">            deleteStatement.executeUpdate();</span>
-<span class="nc" id="L66">        } catch (SQLException ex) {</span>
-<span class="nc" id="L67">            throw new DaoDataException(ex);</span>
+<span class="fc" id="L62">            deleteStatement = connection.prepareStatement(DELETE_ADVERTISER_BY_ID_SQL);</span>
+<span class="fc" id="L63">            deleteStatement.setString(1, id.toString());</span>
+<span class="fc" id="L64">            deleteStatement.executeUpdate();</span>
+<span class="nc" id="L65">        } catch (SQLException ex) {</span>
+<span class="nc" id="L66">            throw new DaoDataException(ex);</span>
         } finally {
-<span class="fc" id="L69">            close(deleteStatement);</span>
+<span class="fc" id="L68">            close(deleteStatement);</span>
         }
-<span class="fc" id="L71">    }</span>
+<span class="fc" id="L70">    }</span>
 
     public void update(Advertiser advertiser) throws DaoDataException {
-<span class="fc" id="L74">        PreparedStatement updateStatement = null;</span>
+<span class="fc" id="L73">        PreparedStatement updateStatement = null;</span>
         try {
-<span class="fc" id="L76">            updateStatement = connection.prepareStatement(UPDATE_ADVERTISER_BY_ID_SQL);</span>
-<span class="fc" id="L77">            updateStatement.setString(1, advertiser.getName());</span>
-<span class="fc" id="L78">            updateStatement.setString(2, advertiser.getContactName());</span>
-<span class="fc" id="L79">            updateStatement.setDouble(3, advertiser.getCreditAmount());</span>
-<span class="fc" id="L80">            updateStatement.setString(4, advertiser.getId().toString());</span>
-<span class="fc" id="L81">            updateStatement.executeUpdate();</span>
-<span class="nc" id="L82">        } catch (SQLException ex) {</span>
-<span class="nc" id="L83">            throw new DaoDataException(ex);</span>
+<span class="fc" id="L75">            updateStatement = connection.prepareStatement(UPDATE_ADVERTISER_BY_ID_SQL);</span>
+<span class="fc" id="L76">            updateStatement.setString(1, advertiser.getName());</span>
+<span class="fc" id="L77">            updateStatement.setString(2, advertiser.getContactName());</span>
+<span class="fc" id="L78">            updateStatement.setDouble(3, advertiser.getCreditAmount());</span>
+<span class="fc" id="L79">            updateStatement.setString(4, advertiser.getId().toString());</span>
+<span class="fc" id="L80">            updateStatement.executeUpdate();</span>
+<span class="nc" id="L81">        } catch (SQLException ex) {</span>
+<span class="nc" id="L82">            throw new DaoDataException(ex);</span>
         } finally {
-<span class="fc" id="L85">            close(updateStatement);</span>
+<span class="fc" id="L84">            close(updateStatement);</span>
         }
-<span class="fc" id="L87">    }</span>
+<span class="fc" id="L86">    }</span>
 
     public UUID save(Advertiser ad) throws DaoDataException {
-<span class="fc" id="L90">        PreparedStatement insertStatement = null;</span>
+<span class="fc" id="L89">        PreparedStatement insertStatement = null;</span>
         try {
-<span class="fc" id="L92">            UUID newId = UUID.randomUUID();</span>
+<span class="fc" id="L91">            UUID newId = UUID.randomUUID();</span>
             // Check if newID already does not exists
             // TODO
             /*
@@ -98,49 +97,49 @@ public class H2AdvertiserDaoImpl implements AdvertiserDao {
             } */
 
             // Save movie to DB
-<span class="fc" id="L101">            insertStatement = connection.prepareStatement(INSERT_ADVERTISER_BY_ID_SQL);</span>
-<span class="fc" id="L102">            insertStatement.setString(1, newId.toString());</span>
-<span class="fc" id="L103">            insertStatement.setString(2, ad.getName());</span>
-<span class="fc" id="L104">            insertStatement.setString(3, ad.getContactName());</span>
-<span class="fc" id="L105">            insertStatement.setDouble(4, ad.getCreditAmount());</span>
-<span class="fc" id="L106">            insertStatement.executeUpdate();</span>
-<span class="fc" id="L107">            return newId;</span>
-<span class="nc" id="L108">        } catch (SQLException ex) {</span>
-<span class="nc" id="L109">            throw new DaoDataException(ex);</span>
+<span class="fc" id="L100">            insertStatement = connection.prepareStatement(INSERT_ADVERTISER_BY_ID_SQL);</span>
+<span class="fc" id="L101">            insertStatement.setString(1, newId.toString());</span>
+<span class="fc" id="L102">            insertStatement.setString(2, ad.getName());</span>
+<span class="fc" id="L103">            insertStatement.setString(3, ad.getContactName());</span>
+<span class="fc" id="L104">            insertStatement.setDouble(4, ad.getCreditAmount());</span>
+<span class="fc" id="L105">            insertStatement.executeUpdate();</span>
+<span class="fc" id="L106">            return newId;</span>
+<span class="nc" id="L107">        } catch (SQLException ex) {</span>
+<span class="nc" id="L108">            throw new DaoDataException(ex);</span>
         } finally {
-<span class="fc" id="L111">            close(insertStatement);</span>
+<span class="fc" id="L110">            close(insertStatement);</span>
         }
     }
 
     public Advertiser get(UUID ud) throws DaoDataException {
-<span class="fc" id="L116">        PreparedStatement getStatement = null;</span>
+<span class="fc" id="L115">        PreparedStatement getStatement = null;</span>
         try {
-<span class="fc" id="L118">            String id = ud.toString();</span>
-<span class="fc" id="L119">            getStatement = connection.prepareStatement(GET_ADVERTISER_BY_ID_SQL);</span>
-<span class="fc" id="L120">            getStatement.setString(1, id);</span>
-<span class="fc" id="L121">            ResultSet rs = getStatement.executeQuery();</span>
-<span class="fc" id="L122">            Advertiser ad = null;</span>
-<span class="pc bpc" id="L123" title="1 of 2 branches missed.">            if (rs == null) {</span>
-<span class="nc" id="L124">                throw new DaoDataException(&quot;User &quot; + ud.toString() + &quot; not found.&quot;);</span>
+<span class="fc" id="L117">            String id = ud.toString();</span>
+<span class="fc" id="L118">            getStatement = connection.prepareStatement(GET_ADVERTISER_BY_ID_SQL);</span>
+<span class="fc" id="L119">            getStatement.setString(1, id);</span>
+<span class="fc" id="L120">            ResultSet rs = getStatement.executeQuery();</span>
+<span class="fc" id="L121">            Advertiser ad = null;</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">            if (rs == null) {</span>
+<span class="nc" id="L123">                throw new DaoDataException(&quot;User &quot; + ud.toString() + &quot; not found.&quot;);</span>
             }
 
-<span class="fc bfc" id="L127" title="All 2 branches covered.">            while (rs.next()) {</span>
-<span class="fc" id="L128">                String name = rs.getString(&quot;NAME&quot;);</span>
-<span class="fc" id="L129">                String contact_name = rs.getString(&quot;CONTACT_NAME&quot;);</span>
-<span class="fc" id="L130">                Double creditAmount = rs.getDouble(&quot;CREDIT_AMOUNT&quot;);</span>
-<span class="fc" id="L131">                System.out.println(&quot;ID: &quot; + id.toString() + &quot; NAME: &quot; + name + &quot; CONTACT_NAME: &quot; + contact_name +</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L127">                String name = rs.getString(&quot;NAME&quot;);</span>
+<span class="fc" id="L128">                String contact_name = rs.getString(&quot;CONTACT_NAME&quot;);</span>
+<span class="fc" id="L129">                Double creditAmount = rs.getDouble(&quot;CREDIT_AMOUNT&quot;);</span>
+<span class="fc" id="L130">                System.out.println(&quot;ID: &quot; + id.toString() + &quot; NAME: &quot; + name + &quot; CONTACT_NAME: &quot; + contact_name +</span>
                         &quot; CREDIT_AMOUNT:&quot; + creditAmount);
-<span class="fc" id="L133">                ad = new Advertiser(ud, name, contact_name, creditAmount);</span>
+<span class="fc" id="L132">                ad = new Advertiser(ud, name, contact_name, creditAmount);</span>
                 // return the first answer
-<span class="fc" id="L135">                return ad;</span>
+<span class="fc" id="L134">                return ad;</span>
             }
 
-<span class="fc" id="L138">            throw new DaoDataException(&quot;User &quot; + ud.toString() + &quot; not found.&quot;);</span>
-<span class="nc" id="L139">        } catch (SQLException ex) {</span>
-<span class="nc" id="L140">            ex.printStackTrace();</span>
-<span class="nc" id="L141">            throw new DaoDataException(ex);</span>
+<span class="fc" id="L137">            throw new DaoDataException(&quot;User &quot; + ud.toString() + &quot; not found.&quot;);</span>
+<span class="nc" id="L138">        } catch (SQLException ex) {</span>
+<span class="nc" id="L139">            ex.printStackTrace();</span>
+<span class="nc" id="L140">            throw new DaoDataException(ex);</span>
         } finally {
-<span class="fc" id="L143">            close(getStatement);</span>
+<span class="fc" id="L142">            close(getStatement);</span>
         }
     }
 
@@ -148,40 +147,40 @@ public class H2AdvertiserDaoImpl implements AdvertiserDao {
 
     public List&lt;Advertiser&gt; get() throws DaoDataException {
 
-<span class="fc" id="L151">        Statement stmt = null;</span>
+<span class="fc" id="L150">        Statement stmt = null;</span>
         try {
-<span class="fc" id="L153">            stmt = connection.createStatement();</span>
-<span class="fc" id="L154">            ResultSet rs = stmt.executeQuery(GET_ALL_ADVERTISER_SQL);</span>
-<span class="fc" id="L155">            System.out.println(&quot;H2 In-Memory Database inserted through Statement&quot;);</span>
-<span class="fc" id="L156">            List&lt;Advertiser&gt; ads = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L157" title="All 2 branches covered.">            while (rs.next()) {</span>
-<span class="fc" id="L158">                String id = rs.getString(&quot;UID&quot;);</span>
-<span class="fc" id="L159">                String name = rs.getString(&quot;NAME&quot;);</span>
-<span class="fc" id="L160">                String genre = rs.getString(&quot;CONTACT_NAME&quot;);</span>
-<span class="fc" id="L161">                Double creditAmt = rs.getDouble(&quot;CREDIT_AMOUNT&quot;);</span>
-<span class="fc" id="L162">                System.out.println(&quot;ID: &quot; + id + &quot; NAME: &quot; + name + &quot; CONTACT_NAME: &quot; + genre +</span>
+<span class="fc" id="L152">            stmt = connection.createStatement();</span>
+<span class="fc" id="L153">            ResultSet rs = stmt.executeQuery(GET_ALL_ADVERTISER_SQL);</span>
+<span class="fc" id="L154">            System.out.println(&quot;H2 In-Memory Database inserted through Statement&quot;);</span>
+<span class="fc" id="L155">            List&lt;Advertiser&gt; ads = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L157">                String id = rs.getString(&quot;UID&quot;);</span>
+<span class="fc" id="L158">                String name = rs.getString(&quot;NAME&quot;);</span>
+<span class="fc" id="L159">                String genre = rs.getString(&quot;CONTACT_NAME&quot;);</span>
+<span class="fc" id="L160">                Double creditAmt = rs.getDouble(&quot;CREDIT_AMOUNT&quot;);</span>
+<span class="fc" id="L161">                System.out.println(&quot;ID: &quot; + id + &quot; NAME: &quot; + name + &quot; CONTACT_NAME: &quot; + genre +</span>
                         &quot; CREDIT_AMOUNT:&quot; + creditAmt);
-<span class="fc" id="L164">                UUID uid = UUID.fromString(id);</span>
-<span class="fc" id="L165">                Advertiser movie = new Advertiser(uid, name, genre, creditAmt);</span>
-<span class="fc" id="L166">                ads.add(movie);</span>
-<span class="fc" id="L167">            }</span>
-<span class="fc" id="L168">            stmt.close();</span>
-<span class="fc" id="L169">            return ads;</span>
-<span class="nc" id="L170">        } catch (NumberFormatException ex) {</span>
-<span class="nc" id="L171">            throw new DaoDataException(ex);</span>
-<span class="nc" id="L172">        } catch (SQLException ex) {</span>
-<span class="nc" id="L173">            throw new DaoDataException(ex);</span>
+<span class="fc" id="L163">                UUID uid = UUID.fromString(id);</span>
+<span class="fc" id="L164">                Advertiser movie = new Advertiser(uid, name, genre, creditAmt);</span>
+<span class="fc" id="L165">                ads.add(movie);</span>
+<span class="fc" id="L166">            }</span>
+<span class="fc" id="L167">            stmt.close();</span>
+<span class="fc" id="L168">            return ads;</span>
+<span class="nc" id="L169">        } catch (NumberFormatException ex) {</span>
+<span class="nc" id="L170">            throw new DaoDataException(ex);</span>
+<span class="nc" id="L171">        } catch (SQLException ex) {</span>
+<span class="nc" id="L172">            throw new DaoDataException(ex);</span>
         } finally {
-<span class="fc" id="L175">            close(stmt);</span>
+<span class="fc" id="L174">            close(stmt);</span>
         }
     }
 
     public void close(Statement ps) {
         try {
-<span class="fc" id="L181">            ps.close();</span>
-<span class="nc" id="L182">        } catch (SQLException ex) {</span>
+<span class="fc" id="L180">            ps.close();</span>
+<span class="nc" id="L181">        } catch (SQLException ex) {</span>
 
-<span class="fc" id="L184">        }</span>
-<span class="fc" id="L185">    }</span>
+<span class="fc" id="L183">        }</span>
+<span class="fc" id="L184">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.0.201801022044</span></div></body></html>

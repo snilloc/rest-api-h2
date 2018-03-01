@@ -2,17 +2,19 @@ package com.snilloc.controller;
 /**
  *
  */
-import com.snilloc.config.AppConfiguration;
-import com.snilloc.dao.AdvertiserDao;
 import com.snilloc.entity.Advertiser;
-import com.snilloc.exceptions.DaoDataException;
+import com.snilloc.exceptions.ServiceException;
+import com.snilloc.services.AdvertiserService;
+import com.snilloc.services.impl.AdvertiserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.Connection;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,20 +24,12 @@ import java.util.UUID;
 @Api(value = "Advertiser Resource", description = "Advertiser information")
 public class RestRequestController {
 
-    @Autowired
-    private AdvertiserDao dao;
+    private AdvertiserService advertiserService;
 
-    public RestRequestController() {
-        AppConfiguration app = new AppConfiguration();
+    public RestRequestController(Connection connection) {
+        advertiserService = new AdvertiserServiceImpl(connection);
     }
 
-    public void init() throws DaoDataException {
-        try {
-            dao.init();
-        } catch (DaoDataException ex) {
-            throw ex;
-        }
-    }
 
     /**
      *
@@ -51,9 +45,9 @@ public class RestRequestController {
     public String create(@RequestBody Advertiser ad) {
         try {
             log.warn("Saving ad index...");
-            UUID uuid = dao.save(ad);
+            UUID uuid = advertiserService.save(ad);
             return uuid.toString();
-        } catch (DaoDataException ex) {
+        } catch (ServiceException ex) {
             // TODO Handled if failed to save data
 
             return null;
@@ -70,8 +64,8 @@ public class RestRequestController {
         try {
             String id = null;
             log.warn("Updating....");
-            dao.update(document);
-        } catch (DaoDataException e) {
+            advertiserService.save(document);
+        } catch (ServiceException e) {
             // Handle if not found
 
             return;
@@ -82,15 +76,21 @@ public class RestRequestController {
      *
      * @param id of advertiser to delete
      */
-    @DeleteMapping(value = "/advertiser/?", params = "id",  consumes="application/json; charset=utf-8")
+    @DeleteMapping(value = "/advertisers/?", params = "id",  consumes="application/json; charset=utf-8")
     public void delete(String id){
+         log.warn("Deleting id: " + id);
+         advertiserService.delete(id);
+    }
+
+    @GetMapping(value = "/advertisers/?", params = "id",  consumes="application/json; charset=utf-8")
+    public Advertiser get(String id){
+        log.warn("Retrieving id: " + id);
         try {
-            log.warn("Deleting id: " + id);
-            UUID uuid = UUID.fromString(id);
-            dao.delete(uuid);
-        } catch (DaoDataException ex) {
-            // Ignore if not found
-            return ;
+            Advertiser ad = advertiserService.get(id);
+            return ad;
+        } catch (ServiceException ex) {
+            // TODO return handling
+            return null;
         }
     }
 
@@ -103,13 +103,14 @@ public class RestRequestController {
     public List<Advertiser> getAllDocuments() {
         try {
             log.warn("Getting all docs:");
-            return dao.get();
-        } catch (DaoDataException ex) {
+            return advertiserService.get();
+        } catch (ServiceException ex) {
             return null;
         }
     }
 
-    public void setAdvertiserDao(AdvertiserDao dao) {
-        this.dao = dao;
+    public void setAdvertiserService(AdvertiserService ad) {
+        this.advertiserService = ad;
     }
+
 }

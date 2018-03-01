@@ -3,7 +3,6 @@ package com.snilloc.dao.impl;
 import com.snilloc.dao.AdvertiserDao;
 import com.snilloc.entity.Advertiser;
 import com.snilloc.exceptions.DaoDataException;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

@@ -1,8 +1,6 @@
 package com.snilloc.controller;
 
 import com.snilloc.config.TestConfiguration;
-import com.snilloc.dao.AdvertiserDao;
-import com.snilloc.dao.impl.H2AdvertiserDaoImpl;
 import com.snilloc.entity.Advertiser;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.*;
@@ -25,14 +23,11 @@ public class RestRequestControllerTest {
 
     @BeforeClass
     public static void setup() {
-        TestConfiguration test = new TestConfiguration();
-        AdvertiserDao dao = new H2AdvertiserDaoImpl(test.getConnection());
-        controller = new RestRequestController();
-        controller.setAdvertiserDao(dao);
         try {
-            controller.init();
+            TestConfiguration test = new TestConfiguration();
+            controller = new RestRequestController(test.getConnection());
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
     }
 
