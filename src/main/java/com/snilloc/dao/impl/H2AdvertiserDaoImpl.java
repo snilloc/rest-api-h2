@@ -5,6 +5,7 @@ import com.snilloc.entity.Advertiser;
 import com.snilloc.exceptions.DaoDataException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,7 +20,7 @@ import java.util.UUID;
  * H2 Database Movie Data Access Object that implements Movie DAO
  */
 @Slf4j
-@Component
+@Repository("advertiserDao")
 public class H2AdvertiserDaoImpl implements AdvertiserDao {
 
     private Connection connection;

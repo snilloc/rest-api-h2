@@ -2,10 +2,10 @@ GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_
 BC-rest-api-h2-demo,com.snilloc.exceptions,ServiceException,9,0,0,0,4,0,2,0,2,0
 BC-rest-api-h2-demo,com.snilloc.exceptions,DaoDataException,4,9,0,0,2,4,1,2,1,2
 BC-rest-api-h2-demo,com.snilloc.config,SwaggerConfig.MyVendorExtension,18,0,0,0,6,0,3,0,3,0
-BC-rest-api-h2-demo,com.snilloc.config,AppConfiguration,55,0,0,0,22,0,7,0,7,0
+BC-rest-api-h2-demo,com.snilloc.config,AppConfiguration,68,0,2,0,28,0,9,0,8,0
 BC-rest-api-h2-demo,com.snilloc.config,SwaggerConfig,88,0,0,0,18,0,4,0,4,0
-BC-rest-api-h2-demo,com.snilloc.controller,RestRequestController,44,46,0,0,18,12,3,5,3,5
-BC-rest-api-h2-demo,com.snilloc.services.impl,AdvertiserServiceImpl,59,54,3,1,18,17,3,5,1,5
+BC-rest-api-h2-demo,com.snilloc.controller,RestRequestController,71,50,0,0,17,12,3,5,3,5
+BC-rest-api-h2-demo,com.snilloc.services.impl,AdvertiserServiceImpl,74,89,3,1,21,25,4,5,2,5
 BC-rest-api-h2-demo,com.snilloc.entity,Advertiser,0,27,0,0,0,10,0,5,0,5
 BC-rest-api-h2-demo,com.snilloc,RestSpringDemo,21,0,0,0,5,0,2,0,2,0
 BC-rest-api-h2-demo,com.snilloc.dao.impl,H2AdvertiserDaoImpl,72,336,1,5,18,81,1,11,0,9

@@ -4,7 +4,6 @@ package com.snilloc.dao;
  */
 
 import com.snilloc.config.TestConfiguration;
-import com.snilloc.dao.AdvertiserDao;
 import com.snilloc.dao.impl.H2AdvertiserDaoImpl;
 import com.snilloc.entity.Advertiser;
 import com.snilloc.exceptions.DaoDataException;
@@ -12,14 +11,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,14 +35,14 @@ import static org.junit.Assert.assertTrue;
 public class AdvertiserDaoTest {
 //public class AdvertiserDaoTest implements ApplicationContextAware {
 
-    private static AdvertiserDao dao;
+    private static Logger log = LoggerFactory.getLogger(AdvertiserDaoTest.class.getName());
 
+ //   @Autowired
+    private static AdvertiserDao advertiserDao;
 //    static ApplicationContext context;
 
-    @Autowired
-    static Connection connection;
-
-
+//    @Autowired
+    private static Connection connection;
 
     /*
     public void setApplicationContext(ApplicationContext context) {
@@ -59,9 +60,9 @@ public class AdvertiserDaoTest {
         try {
             TestConfiguration test = new TestConfiguration();
             connection = test.getConnection();
-            dao = new H2AdvertiserDaoImpl(connection);
+            advertiserDao = new H2AdvertiserDaoImpl(connection);
             // Create Advertiser Table
-            dao.init();
+            advertiserDao.init();
         } catch (Exception ex) {
             // DATA Already created continue
 //            log.error("Failed to Connect to db or create table", ex);
@@ -75,18 +76,18 @@ public class AdvertiserDaoTest {
             log.warn("Creating John smith user ");
             log.warn("---------------------------------");
             Advertiser ad = new Advertiser(null, "Walmart", "Bill", 1000.0);
-            UUID id = dao.save(ad);
+            UUID id = advertiserDao.save(ad);
             assertNotNull(id);
             log.warn("Saved User:" + id.toString());
 
             // Verify data is stored in database
-            Advertiser found = dao.get(id);
+            Advertiser found = advertiserDao.get(id);
             log.warn("Found User: " + found.getName());
             assertTrue(found != null);
             assertTrue(found.getId() != null);
             // Clean up test database
             log.warn("Deleting user:"+ found.getId());
-            dao.delete(found.getId());
+            advertiserDao.delete(found.getId());
         } catch (DaoDataException ex) {
             ex.printStackTrace();
             Assert.fail("Exception should not have been thrown");
@@ -105,16 +106,16 @@ public class AdvertiserDaoTest {
 
         try {
             Advertiser ad = new Advertiser(null, "123", "John", 100.0);
-            UUID index = dao.save(ad);
+            UUID index = advertiserDao.save(ad);
 
             log.warn("Saved User:" + index.toString());
             // Updating Message
             ad = new Advertiser(index, "John", "WellSmith", 50.0);
-            dao.update(ad);
+            advertiserDao.update(ad);
             log.warn("Updating user: " + index.toString());
 
             // Clean up test database
-            dao.delete(index);
+            advertiserDao.delete(index);
             log.warn("Deleting user:" + index.toString());
         } catch (DaoDataException ex) {
             ex.printStackTrace();
@@ -129,14 +130,14 @@ public class AdvertiserDaoTest {
 
         try {
             Advertiser ad = new Advertiser(null, "Walmart", "Test Contact1", 1000.0);
-            UUID id = dao.save(ad);
+            UUID id = advertiserDao.save(ad);
             ad = new Advertiser(id, "Party City", "Test Contact2", 100.0);
-            id = dao.save(ad);
+            id = advertiserDao.save(ad);
             ad = new Advertiser(id, "iHeartMedia", "Test Contact3", 100.0);
-            id = dao.save(ad);
+            id = advertiserDao.save(ad);
 
             // Updating Message
-            List<Advertiser> list = dao.get();
+            List<Advertiser> list = advertiserDao.get();
             assertTrue("Should have thrown an error.  Not Found.", list.size() > 0);
         } catch (DaoDataException ex) {
             assertTrue("Should have return a list of Ads > 2", false);
@@ -152,7 +153,7 @@ public class AdvertiserDaoTest {
         try {
             Advertiser ad = new Advertiser(id, "123", "John", 100.0);
             // Updating Message
-            dao.update(ad);
+            advertiserDao.update(ad);
             log.warn("Updating user: " + id.toString());
             //assertTrue("Should have thrown an error.  Not Found.", false);
         } catch (DaoDataException ex) {
@@ -167,7 +168,7 @@ public class AdvertiserDaoTest {
         UUID id = UUID.randomUUID();
 
         try {
-            dao.delete(id);
+            advertiserDao.delete(id);
             log.warn("Deleting user:" + id.toString());
         } catch (DaoDataException ex) {
             assertTrue(false);
@@ -181,7 +182,7 @@ public class AdvertiserDaoTest {
         UUID id = UUID.randomUUID();
 
         try {
-            Advertiser ad = dao.get(id);
+            Advertiser ad = advertiserDao.get(id);
             if (ad == null) {
 
             } else {
@@ -196,7 +197,7 @@ public class AdvertiserDaoTest {
     @Test
     public void testAdvertiserTable_createAdTableAgain() {
         try {
-            dao.init();
+            advertiserDao.init();
             assertTrue("Should have failed create another table" ,false);
         } catch (Exception ex) {
 

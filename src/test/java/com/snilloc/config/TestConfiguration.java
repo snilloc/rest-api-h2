@@ -1,10 +1,8 @@
 package com.snilloc.config;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.snilloc.controller.RestRequestController;
 import com.snilloc.dao.AdvertiserDao;
 import com.snilloc.dao.impl.H2AdvertiserDaoImpl;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -80,10 +78,17 @@ public class TestConfiguration {
         @Bean
         public AdvertiserDao getAdvertiserDao() {
             try {
-                return new H2AdvertiserDaoImpl(getConnection());
+                AdvertiserDao dao = new H2AdvertiserDaoImpl(getConnection());
+                dao.init();
+                return dao;
             } catch (Exception ex) {
                 return null;
             }
+        }
+
+        @Bean
+        public RestRequestController getRestRequestController() {
+            return new RestRequestController(getConnection());
         }
 
 /*

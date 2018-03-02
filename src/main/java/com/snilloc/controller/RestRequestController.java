@@ -12,10 +12,13 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -33,7 +36,6 @@ public class RestRequestController {
 
     /**
      *
-     * @param ad
      * @return
      */
     @ApiOperation(value = "returns db index of document")
@@ -42,15 +44,13 @@ public class RestRequestController {
             @ApiResponse(code = 101, message = "Success")}
     )
     @PostMapping(value = "/advertisers", consumes = "application/json; charset=utf-8")
-    public String create(@RequestBody Advertiser ad) {
+    public @ResponseBody ResponseEntity<String> create(@RequestParam Map<String, String> body) {
         try {
             log.warn("Saving ad index...");
-            UUID uuid = advertiserService.save(ad);
-            return uuid.toString();
+            UUID uuid = advertiserService.save(body);
+            return new ResponseEntity<String>(uuid.toString(), HttpStatus.CREATED);
         } catch (ServiceException ex) {
-            // TODO Handled if failed to save data
-
-            return null;
+            return new ResponseEntity<String>("Failed to save the request.", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -59,16 +59,16 @@ public class RestRequestController {
      * @param document
      */
     @ApiOperation(value = "returns db index of document")
-    @PostMapping(value = "/advertisers/?", params = "id", consumes = "application/json; charset=utf-8")
-    public void update(@RequestBody Advertiser document){
+    @PutMapping(value = "/advertisers", consumes = "application/json; charset=utf-8")
+    public @ResponseBody ResponseEntity<String> update(@RequestParam Map<String, String> document){
         try {
-            String id = null;
             log.warn("Updating....");
             advertiserService.save(document);
+            return new ResponseEntity<String>("PUT Response", HttpStatus.ACCEPTED);
         } catch (ServiceException e) {
             // Handle if not found
-
-            return;
+            String id = document.get("id");
+            return new ResponseEntity<String>("Failed to update id: " + id, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -76,21 +76,21 @@ public class RestRequestController {
      *
      * @param id of advertiser to delete
      */
-    @DeleteMapping(value = "/advertisers/?", params = "id",  consumes="application/json; charset=utf-8")
-    public void delete(String id){
+    @DeleteMapping(value = "/advertisers/{id}",  consumes="application/json; charset=utf-8")
+    public void delete(@PathVariable (value="id", required=true) String id){
          log.warn("Deleting id: " + id);
          advertiserService.delete(id);
     }
 
-    @GetMapping(value = "/advertisers/?", params = "id",  consumes="application/json; charset=utf-8")
-    public Advertiser get(String id){
+    @GetMapping(value = "/advertisers/{id}", params = "id",  consumes="application/json; charset=utf-8")
+    public @ResponseBody ResponseEntity<Advertiser> get(@RequestParam (value="id", required = true) String id) throws ServiceException {
         log.warn("Retrieving id: " + id);
         try {
             Advertiser ad = advertiserService.get(id);
-            return ad;
+            return new ResponseEntity<Advertiser>(ad, HttpStatus.OK);
         } catch (ServiceException ex) {
-            // TODO return handling
-            return null;
+            throw ex;
+           // return new ResponseEntity<Advertiser>("Failed to retrieve id: " + id, HttpStatus.BAD_REQUEST);
         }
     }
 

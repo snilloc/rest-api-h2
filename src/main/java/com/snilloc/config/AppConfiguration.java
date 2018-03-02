@@ -2,10 +2,12 @@ package com.snilloc.config;
 
 import com.snilloc.dao.AdvertiserDao;
 import com.snilloc.dao.impl.H2AdvertiserDaoImpl;
+import com.snilloc.entity.Advertiser;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
@@ -20,6 +22,7 @@ import java.sql.SQLException;
 @PropertySource("classpath:application.yml")
 @Configuration
 @ConfigurationProperties
+@ComponentScan("com.snilloc")
 public class AppConfiguration {
 
     // From the YAML file
@@ -36,7 +39,8 @@ public class AppConfiguration {
     @Value("${connection}")
     private String connection;
 
-   // @JsonProperty
+    private static AdvertiserDao advertiserDao;
+
     @Bean
     public Connection getConnection() {
         Connection dbConnection = null;
@@ -54,11 +58,20 @@ public class AppConfiguration {
         return dbConnection;
     }
 
+    @Bean
     public AdvertiserDao getAdvertiserDao() {
-        try {
-            return new H2AdvertiserDaoImpl(getConnection());
-        } catch (Exception ex) {
-            return null;
+        if (advertiserDao == null) {
+            try {
+                advertiserDao = new H2AdvertiserDaoImpl(this.getConnection());
+                advertiserDao.init();
+                return advertiserDao;
+            } catch (Exception ex) {
+                //ex.printStackTrace();
+                //throw ex;
+                return advertiserDao;
+            }
+        } else {
+            return advertiserDao;
         }
     }
 
@@ -72,6 +85,10 @@ public class AppConfiguration {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setAdvertiserDao(AdvertiserDao dao) {
+        this.advertiserDao = dao;
     }
 
     public void setConnection(String connection) {

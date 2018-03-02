@@ -3,22 +3,24 @@
 import com.snilloc.config.AppConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+
+import java.sql.Connection;
 
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan
-
-<span class="nc" id="L13">public class RestSpringDemo {</span>
+<span class="nc" id="L15">public class RestSpringDemo {</span>
     public static void main(String[] args){
-<span class="nc" id="L15">        SpringApplication bootApp = new SpringApplication(RestSpringDemo.class);</span>
+<span class="nc" id="L17">        SpringApplication bootApp = new SpringApplication(RestSpringDemo.class);</span>
 //        bootApp.setBanner(Banner.Mode.OFF);
-<span class="nc" id="L17">        bootApp.setLogStartupInfo(true);</span>
-///       ConfigurableApplicationContext context = bootApp.run(args);
- //       Connection client = context.getBean(Connection.class);
-  //      System.out.println(&quot;Client: &quot; + client.get.getHostname() + &quot;:&quot; + client.getPort());
-<span class="nc" id="L21">        SpringApplication.run(RestSpringDemo.class, args);</span>
-<span class="nc" id="L22">    }</span>
+<span class="nc" id="L19">        bootApp.setLogStartupInfo(true);</span>
+//        ConfigurableApplicationContext context = bootApp.run(args);
+//        Connection client = context.getBean(Connection.class);
+//        System.out.println(&quot;Client: &quot; + client.g.get.getHostname() + &quot;:&quot; + client.getPort());
+<span class="nc" id="L23">        SpringApplication.run(RestSpringDemo.class, args);</span>
+<span class="nc" id="L24">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.0.201801022044</span></div></body></html>

@@ -12,13 +12,16 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-<span class="fc" id="L21">@Slf4j</span>
+<span class="fc" id="L24">@Slf4j</span>
 @RestController
 @RequestMapping(&quot;api&quot;)
 @Api(value = &quot;Advertiser Resource&quot;, description = &quot;Advertiser information&quot;)
@@ -26,14 +29,13 @@ public class RestRequestController {
 
     private AdvertiserService advertiserService;
 
-<span class="fc" id="L29">    public RestRequestController(Connection connection) {</span>
-<span class="fc" id="L30">        advertiserService = new AdvertiserServiceImpl(connection);</span>
-<span class="fc" id="L31">    }</span>
+<span class="fc" id="L32">    public RestRequestController(Connection connection) {</span>
+<span class="fc" id="L33">        advertiserService = new AdvertiserServiceImpl(connection);</span>
+<span class="fc" id="L34">    }</span>
 
 
     /**
      *
-     * @param ad
      * @return
      */
     @ApiOperation(value = &quot;returns db index of document&quot;)
@@ -42,15 +44,13 @@ public class RestRequestController {
             @ApiResponse(code = 101, message = &quot;Success&quot;)}
     )
     @PostMapping(value = &quot;/advertisers&quot;, consumes = &quot;application/json; charset=utf-8&quot;)
-    public String create(@RequestBody Advertiser ad) {
+    public @ResponseBody ResponseEntity&lt;String&gt; create(@RequestParam Map&lt;String, String&gt; body) {
         try {
-<span class="fc" id="L47">            log.warn(&quot;Saving ad index...&quot;);</span>
-<span class="fc" id="L48">            UUID uuid = advertiserService.save(ad);</span>
-<span class="fc" id="L49">            return uuid.toString();</span>
-<span class="nc" id="L50">        } catch (ServiceException ex) {</span>
-            // TODO Handled if failed to save data
-
-<span class="nc" id="L53">            return null;</span>
+<span class="fc" id="L49">            log.warn(&quot;Saving ad index...&quot;);</span>
+<span class="fc" id="L50">            UUID uuid = advertiserService.save(body);</span>
+<span class="fc" id="L51">            return new ResponseEntity&lt;String&gt;(uuid.toString(), HttpStatus.CREATED);</span>
+<span class="nc" id="L52">        } catch (ServiceException ex) {</span>
+<span class="nc" id="L53">            return new ResponseEntity&lt;String&gt;(&quot;Failed to save the request.&quot;, HttpStatus.BAD_REQUEST);</span>
         }
     }
 
@@ -59,38 +59,38 @@ public class RestRequestController {
      * @param document
      */
     @ApiOperation(value = &quot;returns db index of document&quot;)
-    @PostMapping(value = &quot;/advertisers/?&quot;, params = &quot;id&quot;, consumes = &quot;application/json; charset=utf-8&quot;)
-    public void update(@RequestBody Advertiser document){
+    @PutMapping(value = &quot;/advertisers&quot;, consumes = &quot;application/json; charset=utf-8&quot;)
+    public @ResponseBody ResponseEntity&lt;String&gt; update(@RequestParam Map&lt;String, String&gt; document){
         try {
-<span class="nc" id="L65">            String id = null;</span>
-<span class="nc" id="L66">            log.warn(&quot;Updating....&quot;);</span>
-<span class="nc" id="L67">            advertiserService.save(document);</span>
+<span class="nc" id="L65">            log.warn(&quot;Updating....&quot;);</span>
+<span class="nc" id="L66">            advertiserService.save(document);</span>
+<span class="nc" id="L67">            return new ResponseEntity&lt;String&gt;(&quot;PUT Response&quot;, HttpStatus.ACCEPTED);</span>
 <span class="nc" id="L68">        } catch (ServiceException e) {</span>
             // Handle if not found
-
-<span class="nc" id="L71">            return;</span>
-<span class="nc" id="L72">        }</span>
-<span class="nc" id="L73">    }</span>
+<span class="nc" id="L70">            String id = document.get(&quot;id&quot;);</span>
+<span class="nc" id="L71">            return new ResponseEntity&lt;String&gt;(&quot;Failed to update id: &quot; + id, HttpStatus.BAD_REQUEST);</span>
+        }
+    }
 
     /**
      *
      * @param id of advertiser to delete
      */
-    @DeleteMapping(value = &quot;/advertisers/?&quot;, params = &quot;id&quot;,  consumes=&quot;application/json; charset=utf-8&quot;)
-    public void delete(String id){
+    @DeleteMapping(value = &quot;/advertisers/{id}&quot;,  consumes=&quot;application/json; charset=utf-8&quot;)
+    public void delete(@PathVariable (value=&quot;id&quot;, required=true) String id){
 <span class="fc" id="L81">         log.warn(&quot;Deleting id: &quot; + id);</span>
 <span class="fc" id="L82">         advertiserService.delete(id);</span>
 <span class="fc" id="L83">    }</span>
 
-    @GetMapping(value = &quot;/advertisers/?&quot;, params = &quot;id&quot;,  consumes=&quot;application/json; charset=utf-8&quot;)
-    public Advertiser get(String id){
+    @GetMapping(value = &quot;/advertisers/{id}&quot;, params = &quot;id&quot;,  consumes=&quot;application/json; charset=utf-8&quot;)
+    public @ResponseBody ResponseEntity&lt;Advertiser&gt; get(@RequestParam (value=&quot;id&quot;, required = true) String id) throws ServiceException {
 <span class="nc" id="L87">        log.warn(&quot;Retrieving id: &quot; + id);</span>
         try {
 <span class="nc" id="L89">            Advertiser ad = advertiserService.get(id);</span>
-<span class="nc" id="L90">            return ad;</span>
+<span class="nc" id="L90">            return new ResponseEntity&lt;Advertiser&gt;(ad, HttpStatus.OK);</span>
 <span class="nc" id="L91">        } catch (ServiceException ex) {</span>
-            // TODO return handling
-<span class="nc" id="L93">            return null;</span>
+<span class="nc" id="L92">            throw ex;</span>
+           // return new ResponseEntity&lt;Advertiser&gt;(&quot;Failed to retrieve id: &quot; + id, HttpStatus.BAD_REQUEST);
         }
     }
 

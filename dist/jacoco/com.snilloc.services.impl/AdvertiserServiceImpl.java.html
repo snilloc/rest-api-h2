@@ -8,81 +8,100 @@ import com.snilloc.exceptions.ServiceException;
 import com.snilloc.services.AdvertiserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-<span class="fc" id="L16">@Slf4j</span>
+<span class="fc" id="L19">@Slf4j</span>
+@Service
 public class AdvertiserServiceImpl implements AdvertiserService {
 
+//    @Qualifier(&quot;h2AdvertiserDaoImpl&quot;)
     @Autowired
-    private AdvertiserDao dao;
+    private AdvertiserDao advertiserDao;
 
-<span class="fc" id="L22">    public AdvertiserServiceImpl(Connection connection) {</span>
+<span class="fc" id="L27">    public AdvertiserServiceImpl(Connection connection) {</span>
+
         try {
-<span class="fc" id="L24">            dao = new H2AdvertiserDaoImpl(connection);</span>
-<span class="fc" id="L25">            dao.init();</span>
-<span class="nc" id="L26">        } catch (DaoDataException ex) {</span>
-//              throw ex;
-<span class="fc" id="L28">        }</span>
-<span class="fc" id="L29">    }</span>
-
+<span class="fc" id="L30">            advertiserDao = new H2AdvertiserDaoImpl(connection);</span>
+<span class="fc" id="L31">            advertiserDao.init();</span>
+<span class="fc" id="L32">        } catch (DaoDataException ex) {</span>
+            //System.out.println(&quot;ADVERT TABLE already created&quot;);
+            //ex.printStackTrace();
+<span class="fc" id="L35">        }</span>
+<span class="fc" id="L36">    }</span>
 
 
     public List&lt;Advertiser&gt; get() throws ServiceException {
         try {
-<span class="fc" id="L35">            List&lt;Advertiser&gt; ads = null;</span>
-<span class="fc" id="L36">            ads = dao.get();</span>
-<span class="fc" id="L37">            return ads;</span>
-<span class="nc" id="L38">        } catch (DaoDataException ex) {</span>
-<span class="nc" id="L39">            throw new ServiceException(&quot;Failed to find any&quot;, ex);</span>
+<span class="fc" id="L41">            List&lt;Advertiser&gt; ads = null;</span>
+<span class="fc" id="L42">            ads = advertiserDao.get();</span>
+<span class="fc" id="L43">            return ads;</span>
+<span class="nc" id="L44">        } catch (DaoDataException ex) {</span>
+<span class="nc" id="L45">            throw new ServiceException(&quot;Failed to find any&quot;, ex);</span>
         }
     }
 
 
     public Advertiser get(String id) throws IllegalArgumentException, ServiceException {
         try {
-<span class="nc bnc" id="L46" title="All 2 branches missed.">            if (id != null) {</span>
-<span class="nc" id="L47">                throw new IllegalArgumentException(&quot;Invalid id&quot;);</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">            if (id != null) {</span>
+<span class="nc" id="L53">                throw new IllegalArgumentException(&quot;Invalid id&quot;);</span>
             }
 
-<span class="nc" id="L50">            UUID uid = UUID.fromString(id);</span>
+<span class="nc" id="L56">            UUID uid = UUID.fromString(id);</span>
 
-<span class="nc" id="L52">            Advertiser ads = dao.get(uid);</span>
-<span class="nc" id="L53">            return ads;</span>
-<span class="nc" id="L54">        } catch (IllegalArgumentException ex) {</span>
-<span class="nc" id="L55">            throw ex;</span>
-<span class="nc" id="L56">        } catch (DaoDataException ex) {</span>
-<span class="nc" id="L57">            throw new ServiceException(&quot;Failed to find any&quot;, ex);</span>
+<span class="nc" id="L58">            Advertiser ads = advertiserDao.get(uid);</span>
+<span class="nc" id="L59">            return ads;</span>
+<span class="nc" id="L60">        } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L61">            throw ex;</span>
+<span class="nc" id="L62">        } catch (DaoDataException ex) {</span>
+<span class="nc" id="L63">            throw new ServiceException(&quot;Failed to find any&quot;, ex);</span>
         }
     }
 
-    public UUID save(Advertiser ad) throws IllegalArgumentException, ServiceException {
+    public UUID save(Map&lt;String, String&gt; body) throws IllegalArgumentException, ServiceException {
+<span class="fc" id="L68">        Advertiser ad = null;</span>
         try {
-<span class="pc bpc" id="L63" title="1 of 2 branches missed.">            if (ad.getId() == null) {</span>
-<span class="fc" id="L64">                UUID id = dao.save(ad);</span>
-<span class="fc" id="L65">                return id;</span>
+<span class="fc" id="L70">            String name = body.get(&quot;name&quot;);</span>
+<span class="fc" id="L71">            String contactName = body.get(&quot;contactName&quot;);</span>
+<span class="fc" id="L72">            Double creditAmount = Double.parseDouble(body.get(&quot;creditAmount&quot;));</span>
+<span class="fc" id="L73">            String id = body.get(&quot;id&quot;);</span>
+<span class="fc" id="L74">            UUID uid = null;</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">            if (id != null) {</span>
+<span class="nc" id="L76">                uid = UUID.fromString(id);</span>
+<span class="nc" id="L77">                ad = new Advertiser(uid, name, contactName, creditAmount);</span>
+<span class="nc" id="L78">                advertiserDao.update(ad);</span>
+<span class="nc" id="L79">                return ad.getId();</span>
             } else {
-<span class="nc" id="L67">                dao.update(ad);</span>
-<span class="nc" id="L68">                return ad.getId();</span>
+<span class="fc" id="L81">                ad = new Advertiser(uid, name, contactName, creditAmount);</span>
+<span class="fc" id="L82">                UUID idCreated = advertiserDao.save(ad);</span>
+<span class="fc" id="L83">                return idCreated;</span>
             }
 
-<span class="nc" id="L71">        } catch (DaoDataException ex) {</span>
-<span class="nc" id="L72">            throw new ServiceException(&quot;Failed to update: &quot; + ad.getId(), ex);</span>
+<span class="nc" id="L86">        } catch (DaoDataException ex) {</span>
+<span class="nc" id="L87">            throw new ServiceException(&quot;Failed to update: &quot; + ad.getId(), ex);</span>
         }
     }
 
-        public void delete(String id) {
-            try {
-<span class="fc" id="L78">                log.warn(&quot;Deleting id: &quot; + id);</span>
-<span class="fc" id="L79">                UUID uuid = UUID.fromString(id);</span>
-<span class="fc" id="L80">                dao.delete(uuid);</span>
-<span class="nc" id="L81">            } catch (DaoDataException ex) {</span>
-                // Ignore if not found
-<span class="nc" id="L83">                return ;</span>
-<span class="fc" id="L84">            }</span>
-<span class="fc" id="L85">        }</span>
+    public void delete(String id) {
+        try {
+<span class="fc" id="L93">            log.warn(&quot;Deleting id: &quot; + id);</span>
+<span class="fc" id="L94">            UUID uuid = UUID.fromString(id);</span>
+<span class="fc" id="L95">            advertiserDao.delete(uuid);</span>
+<span class="nc" id="L96">        } catch (DaoDataException ex) {</span>
+            // Ignore if not found
+<span class="nc" id="L98">            return;</span>
+<span class="fc" id="L99">        }</span>
+<span class="fc" id="L100">    }</span>
+
+    public void setAdvertiserDao(AdvertiserDao dao) {
+<span class="nc" id="L103">        this.advertiserDao = dao;</span>
+<span class="nc" id="L104">    }</span>
 
 
 }

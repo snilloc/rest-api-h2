@@ -2,10 +2,12 @@
 
 import com.snilloc.dao.AdvertiserDao;
 import com.snilloc.dao.impl.H2AdvertiserDaoImpl;
+import com.snilloc.entity.Advertiser;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
@@ -20,7 +22,8 @@ import java.sql.SQLException;
 @PropertySource(&quot;classpath:application.yml&quot;)
 @Configuration
 @ConfigurationProperties
-<span class="nc" id="L23">public class AppConfiguration {</span>
+@ComponentScan(&quot;com.snilloc&quot;)
+<span class="nc" id="L26">public class AppConfiguration {</span>
 
     // From the YAML file
     @NotEmpty
@@ -36,46 +39,60 @@ import java.sql.SQLException;
     @Value(&quot;${connection}&quot;)
     private String connection;
 
-   // @JsonProperty
+    private static AdvertiserDao advertiserDao;
+
     @Bean
     public Connection getConnection() {
-<span class="nc" id="L42">        Connection dbConnection = null;</span>
+<span class="nc" id="L46">        Connection dbConnection = null;</span>
         try {
-<span class="nc" id="L44">            Class.forName(driverClass);</span>
-<span class="nc" id="L45">        } catch (ClassNotFoundException ex) {</span>
-<span class="nc" id="L46">            System.out.println(ex.getMessage());</span>
-<span class="nc" id="L47">        }</span>
+<span class="nc" id="L48">            Class.forName(driverClass);</span>
+<span class="nc" id="L49">        } catch (ClassNotFoundException ex) {</span>
+<span class="nc" id="L50">            System.out.println(ex.getMessage());</span>
+<span class="nc" id="L51">        }</span>
 
         try {
-<span class="nc" id="L50">            dbConnection = DriverManager.getConnection(connection, user, password);</span>
-<span class="nc" id="L51">        } catch (SQLException ex) {</span>
-<span class="nc" id="L52">            System.out.println(&quot;ERROR connection to DB&quot;);</span>
-<span class="nc" id="L53">        }</span>
-<span class="nc" id="L54">        return dbConnection;</span>
+<span class="nc" id="L54">            dbConnection = DriverManager.getConnection(connection, user, password);</span>
+<span class="nc" id="L55">        } catch (SQLException ex) {</span>
+<span class="nc" id="L56">            System.out.println(&quot;ERROR connection to DB&quot;);</span>
+<span class="nc" id="L57">        }</span>
+<span class="nc" id="L58">        return dbConnection;</span>
     }
 
+    @Bean
     public AdvertiserDao getAdvertiserDao() {
-        try {
-<span class="nc" id="L59">            return new H2AdvertiserDaoImpl(getConnection());</span>
-<span class="nc" id="L60">        } catch (Exception ex) {</span>
-<span class="nc" id="L61">            return null;</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (advertiserDao == null) {</span>
+            try {
+<span class="nc" id="L65">                advertiserDao = new H2AdvertiserDaoImpl(this.getConnection());</span>
+<span class="nc" id="L66">                advertiserDao.init();</span>
+<span class="nc" id="L67">                return advertiserDao;</span>
+<span class="nc" id="L68">            } catch (Exception ex) {</span>
+                //ex.printStackTrace();
+                //throw ex;
+<span class="nc" id="L71">                return advertiserDao;</span>
+            }
+        } else {
+<span class="nc" id="L74">            return advertiserDao;</span>
         }
     }
 
     public void setDriverClass(String driverClass) {
-<span class="nc" id="L66">        this.driverClass = driverClass;</span>
-<span class="nc" id="L67">    }</span>
+<span class="nc" id="L79">        this.driverClass = driverClass;</span>
+<span class="nc" id="L80">    }</span>
 
     public void setUser(String user) {
-<span class="nc" id="L70">        this.user = user;</span>
-<span class="nc" id="L71">    }</span>
+<span class="nc" id="L83">        this.user = user;</span>
+<span class="nc" id="L84">    }</span>
 
     public void setPassword(String password) {
-<span class="nc" id="L74">        this.password = password;</span>
-<span class="nc" id="L75">    }</span>
+<span class="nc" id="L87">        this.password = password;</span>
+<span class="nc" id="L88">    }</span>
+
+    public void setAdvertiserDao(AdvertiserDao dao) {
+<span class="nc" id="L91">        this.advertiserDao = dao;</span>
+<span class="nc" id="L92">    }</span>
 
     public void setConnection(String connection) {
-<span class="nc" id="L78">        this.connection = connection;</span>
-<span class="nc" id="L79">    }</span>
+<span class="nc" id="L95">        this.connection = connection;</span>
+<span class="nc" id="L96">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.0.201801022044</span></div></body></html>
