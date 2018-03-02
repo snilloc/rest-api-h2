@@ -27,8 +27,11 @@ mvn clean install
 ```
 
 
-## Bring up Ad REST API
+## Bring up Applcation through Maven and Spring
 ```
 mvn spring-boot:run
 ```
+
+## Bring up Application through jar
+java -jar dist/rest-api-demo.jar 
 

@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-<span class="fc" id="L24">@Slf4j</span>
+<span class="fc" id="L25">@Slf4j</span>
 @RestController
 @RequestMapping(&quot;api&quot;)
 @Api(value = &quot;Advertiser Resource&quot;, description = &quot;Advertiser information&quot;)
@@ -29,9 +30,12 @@ public class RestRequestController {
 
     private AdvertiserService advertiserService;
 
-<span class="fc" id="L32">    public RestRequestController(Connection connection) {</span>
-<span class="fc" id="L33">        advertiserService = new AdvertiserServiceImpl(connection);</span>
-<span class="fc" id="L34">    }</span>
+    @Autowired
+    Connection connection;
+
+<span class="fc" id="L36">    public RestRequestController(Connection connection) {</span>
+<span class="fc" id="L37">        advertiserService = new AdvertiserServiceImpl(connection);</span>
+<span class="fc" id="L38">    }</span>
 
 
     /**
@@ -46,11 +50,11 @@ public class RestRequestController {
     @PostMapping(value = &quot;/advertisers&quot;, consumes = &quot;application/json; charset=utf-8&quot;)
     public @ResponseBody ResponseEntity&lt;String&gt; create(@RequestParam Map&lt;String, String&gt; body) {
         try {
-<span class="fc" id="L49">            log.warn(&quot;Saving ad index...&quot;);</span>
-<span class="fc" id="L50">            UUID uuid = advertiserService.save(body);</span>
-<span class="fc" id="L51">            return new ResponseEntity&lt;String&gt;(uuid.toString(), HttpStatus.CREATED);</span>
-<span class="nc" id="L52">        } catch (ServiceException ex) {</span>
-<span class="nc" id="L53">            return new ResponseEntity&lt;String&gt;(&quot;Failed to save the request.&quot;, HttpStatus.BAD_REQUEST);</span>
+<span class="fc" id="L53">            log.warn(&quot;Saving ad index...&quot;);</span>
+<span class="fc" id="L54">            UUID uuid = advertiserService.save(body);</span>
+<span class="fc" id="L55">            return new ResponseEntity&lt;String&gt;(uuid.toString(), HttpStatus.CREATED);</span>
+<span class="nc" id="L56">        } catch (ServiceException ex) {</span>
+<span class="nc" id="L57">            return new ResponseEntity&lt;String&gt;(&quot;Failed to save the request.&quot;, HttpStatus.BAD_REQUEST);</span>
         }
     }
 
@@ -62,13 +66,13 @@ public class RestRequestController {
     @PutMapping(value = &quot;/advertisers&quot;, consumes = &quot;application/json; charset=utf-8&quot;)
     public @ResponseBody ResponseEntity&lt;String&gt; update(@RequestParam Map&lt;String, String&gt; document){
         try {
-<span class="nc" id="L65">            log.warn(&quot;Updating....&quot;);</span>
-<span class="nc" id="L66">            advertiserService.save(document);</span>
-<span class="nc" id="L67">            return new ResponseEntity&lt;String&gt;(&quot;PUT Response&quot;, HttpStatus.ACCEPTED);</span>
-<span class="nc" id="L68">        } catch (ServiceException e) {</span>
+<span class="nc" id="L69">            log.warn(&quot;Updating....&quot;);</span>
+<span class="nc" id="L70">            advertiserService.save(document);</span>
+<span class="nc" id="L71">            return new ResponseEntity&lt;String&gt;(&quot;PUT Response&quot;, HttpStatus.ACCEPTED);</span>
+<span class="nc" id="L72">        } catch (ServiceException e) {</span>
             // Handle if not found
-<span class="nc" id="L70">            String id = document.get(&quot;id&quot;);</span>
-<span class="nc" id="L71">            return new ResponseEntity&lt;String&gt;(&quot;Failed to update id: &quot; + id, HttpStatus.BAD_REQUEST);</span>
+<span class="nc" id="L74">            String id = document.get(&quot;id&quot;);</span>
+<span class="nc" id="L75">            return new ResponseEntity&lt;String&gt;(&quot;Failed to update id: &quot; + id, HttpStatus.BAD_REQUEST);</span>
         }
     }
 
@@ -78,18 +82,18 @@ public class RestRequestController {
      */
     @DeleteMapping(value = &quot;/advertisers/{id}&quot;,  consumes=&quot;application/json; charset=utf-8&quot;)
     public void delete(@PathVariable (value=&quot;id&quot;, required=true) String id){
-<span class="fc" id="L81">         log.warn(&quot;Deleting id: &quot; + id);</span>
-<span class="fc" id="L82">         advertiserService.delete(id);</span>
-<span class="fc" id="L83">    }</span>
+<span class="fc" id="L85">         log.warn(&quot;Deleting id: &quot; + id);</span>
+<span class="fc" id="L86">         advertiserService.delete(id);</span>
+<span class="fc" id="L87">    }</span>
 
     @GetMapping(value = &quot;/advertisers/{id}&quot;, params = &quot;id&quot;,  consumes=&quot;application/json; charset=utf-8&quot;)
     public @ResponseBody ResponseEntity&lt;Advertiser&gt; get(@RequestParam (value=&quot;id&quot;, required = true) String id) throws ServiceException {
-<span class="nc" id="L87">        log.warn(&quot;Retrieving id: &quot; + id);</span>
+<span class="nc" id="L91">        log.warn(&quot;Retrieving id: &quot; + id);</span>
         try {
-<span class="nc" id="L89">            Advertiser ad = advertiserService.get(id);</span>
-<span class="nc" id="L90">            return new ResponseEntity&lt;Advertiser&gt;(ad, HttpStatus.OK);</span>
-<span class="nc" id="L91">        } catch (ServiceException ex) {</span>
-<span class="nc" id="L92">            throw ex;</span>
+<span class="nc" id="L93">            Advertiser ad = advertiserService.get(id);</span>
+<span class="nc" id="L94">            return new ResponseEntity&lt;Advertiser&gt;(ad, HttpStatus.OK);</span>
+<span class="nc" id="L95">        } catch (ServiceException ex) {</span>
+<span class="nc" id="L96">            throw ex;</span>
            // return new ResponseEntity&lt;Advertiser&gt;(&quot;Failed to retrieve id: &quot; + id, HttpStatus.BAD_REQUEST);
         }
     }
@@ -102,16 +106,16 @@ public class RestRequestController {
     @GetMapping(value = &quot;/advertisers/all&quot;, produces = &quot;application/json; charset=utf-8&quot;)
     public List&lt;Advertiser&gt; getAllDocuments() {
         try {
-<span class="fc" id="L105">            log.warn(&quot;Getting all docs:&quot;);</span>
-<span class="fc" id="L106">            return advertiserService.get();</span>
-<span class="nc" id="L107">        } catch (ServiceException ex) {</span>
-<span class="nc" id="L108">            return null;</span>
+<span class="fc" id="L109">            log.warn(&quot;Getting all docs:&quot;);</span>
+<span class="fc" id="L110">            return advertiserService.get();</span>
+<span class="nc" id="L111">        } catch (ServiceException ex) {</span>
+<span class="nc" id="L112">            return null;</span>
         }
     }
 
     public void setAdvertiserService(AdvertiserService ad) {
-<span class="nc" id="L113">        this.advertiserService = ad;</span>
-<span class="nc" id="L114">    }</span>
+<span class="nc" id="L117">        this.advertiserService = ad;</span>
+<span class="nc" id="L118">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.0.201801022044</span></div></body></html>

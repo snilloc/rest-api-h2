@@ -1,0 +1,23 @@
+${Ansi.RED}                  $$$        $$$$$      $$$$         $$$$     $$$$$
+${Ansi.GREEN}                  $$$       $$$$$$$     $$$$         $$$$    $$$$$$$
+${Ansi.BLUE}                  $$$       $$$$$$$     $$$$$       $$$$$    $$$$$$$
+${Ansi.RED}                  $$$       $$$$$$$      $$$$       $$$$     $$$$$$$
+${Ansi.GREEN}                  $$$      $$$$ $$$$     $$$$$     $$$$$    $$$$ $$$$
+${Ansi.BLUE}                  $$$      $$$$ $$$$      $$$$     $$$$     $$$$ $$$$
+${Ansi.RED}                  $$$     $$$$$ $$$$$     $$$$     $$$$    $$$$$ $$$$$
+${Ansi.GREEN}                  $$$     $$$$   $$$$     $$$$$   $$$$$    $$$$   $$$$
+${Ansi.BLUE}                  $$$     $$$$   $$$$      $$$$   $$$$     $$$$   $$$$
+${Ansi.RED}                  $$$    $$$$$   $$$$$     $$$$$ $$$$$    $$$$$   $$$$$
+${Ansi.GREEN}                  $$$    $$$$$$$$$$$$$      $$$$ $$$$     $$$$$$$$$$$$$
+${Ansi.BLUE}          $$$$   $$$$    $$$$$$$$$$$$$      $$$$ $$$$     $$$$$$$$$$$$$
+${Ansi.RED}          $$$$   $$$$   $$$$$$$$$$$$$$$      $$$$$$$     $$$$$$$$$$$$$$$
+${Ansi.GREEN}          $$$$$ $$$$$   $$$$       $$$$      $$$$$$$     $$$$       $$$$
+${Ansi.BLUE}          $$$$$$$$$$$  $$$$$       $$$$$     $$$$$$$    $$$$$       $$$$$
+${Ansi.RED}           $$$$$$$$$   $$$$         $$$$      $$$$$     $$$$         $$$$
+${Ansi.GREEN}            $$$$$$$    $$$$         $$$$      $$$$$     $$$$         $$$$
+
+${AnsiColor.WHITE}
+Application Version: ${application.version}
+Application Title: ${application.title}
+Spring Boot Version: ${spring-boot.version}
+Spring Boot Formatted Version: ${spring-boot.formatted-version}

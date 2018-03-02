@@ -9,7 +9,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,6 +25,7 @@ import java.sql.SQLException;
 @Configuration
 @ConfigurationProperties
 @ComponentScan("com.snilloc")
+@Import( { SwaggerConfig.class})
 public class AppConfiguration {
 
     // From the YAML file
@@ -94,4 +97,14 @@ public class AppConfiguration {
     public void setConnection(String connection) {
         this.connection = connection;
     }
+
+    /*
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry
+                .addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry
+                .addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }*/
 }
