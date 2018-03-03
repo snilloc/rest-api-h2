@@ -4,7 +4,6 @@ import com.snilloc.dao.AdvertiserDao;
 import com.snilloc.entity.Advertiser;
 import com.snilloc.exceptions.DaoDataException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
